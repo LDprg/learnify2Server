@@ -12,5 +12,5 @@ db.createUser(
 );
 
 db = db.getSiblingDB('learnify');
-db.createCollection('users');
-db.createCollection('set');
+// db.createCollection('users');
+// db.createCollection('set');

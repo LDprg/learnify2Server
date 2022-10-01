@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  server:
+    image: "node:18"
+    restart: always
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - .:/home/node/app
+    ports:
+      - "8080:8080"
+    command: "npm run start"
+    links:
+      - database
+    depends_on:
+      - database
+  database:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: learnify
+    ports:
+        - '27017:27017'
+    volumes:
+      - ./MongoDB/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
