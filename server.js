@@ -7,11 +7,25 @@ const authConfig = require("./config/auth.config");
 
 const app = express();
 
-var corsOptions = {
-	origin: "http://localhost:8080"
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+    credentials: true,
+    exposedHeaders: '*',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    preflightContinue: false,
+    origin: true,
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD']
+  }))
+  app.options(
+    '*',
+    cors({
+      credentials: true,
+      exposedHeaders: '*',
+      allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+      preflightContinue: false,
+      origin: true,
+      methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD']
+    })
+  );
 
 // parse requests of content-type - application/json
 app.use(express.json());

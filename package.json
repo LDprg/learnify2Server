@@ -18,7 +18,10 @@
     "mongoose": "^6.6.2"
   },
   "devDependencies": {
+    "@types/concurrently": "^7.0.0",
     "@types/nodemon": "^1.19.2",
+    "concurrently": "^7.4.0",
+    "local-cors-proxy": "^1.1.0",
     "nodemon": "^2.0.20"
   }
 }
