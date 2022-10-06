@@ -11,4 +11,5 @@ module.exports = function (app) {
     });
     
     app.get("/api/user", [authJwt.verifyToken], controller.getuser);
+    app.get("/api/user/set", [authJwt.verifyToken], controller.getuserset);
 };

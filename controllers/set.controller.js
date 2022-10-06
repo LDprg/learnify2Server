@@ -67,9 +67,7 @@ exports.setcreate = (req, res) => {
 };
 
 exports.setchange = (req, res) => {
-    console.log(req.body);
-
-    Set.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, set) => {
+    Set.findById(req.params.id, (err, set) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
@@ -80,12 +78,23 @@ exports.setchange = (req, res) => {
         if (set.userid != req.userId) {
             return res.status(401).send({ message: "Unauthorized!" });
         }
-        res.send({ message: "Set updated successfully!" });
+
+        Set.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, set) => {
+            if (err) {
+                res.status(500).send({ message: err });
+                return;
+            }
+            if (!set) {
+                return res.status(404).send({ message: "Set Not found." });
+            }
+
+            res.send({ message: "Set updated successfully!" });
+        });
     });
 };
 
 exports.setdelete = (req, res) => {
-    Set.findByIdAndRemove(req.params.id, (err, set) => {
+    Set.findById(req.params.id, (err, set) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
@@ -96,7 +105,19 @@ exports.setdelete = (req, res) => {
         if (set.userid != req.userId) {
             return res.status(401).send({ message: "Unauthorized!" });
         }
+        Set.findByIdAndRemove(req.params.id, (err, set) => {
+            if (err) {
+                res.status(500).send({ message: err });
+                return;
+            }
+            if (!set) {
+                return res.status(404).send({ message: "Set Not found." });
+            }
+            if (set.userid != req.userId) {
+                return res.status(401).send({ message: "Unauthorized!" });
+            }
 
-        res.send({ message: "Set deleted successfully!" });
+            res.send({ message: "Set deleted successfully!" });
+        });
     });
 };

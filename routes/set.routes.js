@@ -11,7 +11,7 @@ module.exports = function (app) {
     });
 
     app.post("/api/set", [authJwt.verifyToken], controller.setcreate);
-    app.get("/api/set/search/:text/:max", [authJwt.verifyToken], controller.setsearch);
+    app.get("/api/set/search/:text/:max", controller.setsearch);
     app.get("/api/set/:id/info", controller.setinfo);
     app.get("/api/set/:id", controller.setall);
     app.put("/api/set/:id", [authJwt.verifyToken], controller.setchange);
