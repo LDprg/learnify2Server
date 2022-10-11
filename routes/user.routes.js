@@ -12,4 +12,8 @@ module.exports = function (app) {
     
     app.get("/api/user", [authJwt.verifyToken], controller.getuser);
     app.get("/api/user/set", [authJwt.verifyToken], controller.getuserset);
+
+    app.get("/api/user/stat/:id", [authJwt.verifyToken], controller.getuserstat);
+    app.get("/api/user/stat/:id/short", [authJwt.verifyToken], controller.getuserstatshort);
+    app.put("/api/user/stat/:id/:card", [authJwt.verifyToken], controller.setuserstat);
 };
