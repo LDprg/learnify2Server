@@ -61,9 +61,9 @@ exports.getuserstatshort = (req, res) => {
         }
 
         var ans = JSON.parse(JSON.stringify(stat));
-        var data = new Map();
 
         for (var item of ans.data) {
+            var data = new Map();
             for (var stats of item.stat) {
                 stats.date = undefined;
                 data[stats.type] = data[stats.type] ? data[stats.type] + 1 : 1;
