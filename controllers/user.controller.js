@@ -63,8 +63,8 @@ exports.getuserstatshort = (req, res) => {
         var ans = JSON.parse(JSON.stringify(stat));
         var data = new Map();
 
-        for(var item of ans.data) {
-            for(var stats of item.stat) {
+        for (var item of ans.data) {
+            for (var stats of item.stat) {
                 stats.date = undefined;
                 data[stats.type] = data[stats.type] ? data[stats.type] + 1 : 1;
             }
@@ -91,8 +91,6 @@ exports.setuserstat = (req, res) => {
                     res.status(500).send({ message: err });
                     return;
                 }
-                console.log(req);
-                console.log(res);
                 this.setuserstat(req, res);
             });
             return;
@@ -104,21 +102,21 @@ exports.setuserstat = (req, res) => {
 
         var found = false;
 
-        for(var item of stat.data) {
-            if(item.cardid == req.params.card) {
-                item.stat.push({type: req.body.type, date: Date.now()});
+        for (var item of stat.data) {
+            if (item.cardid == req.params.card) {
+                item.stat.push({ type: req.body.type, date: Date.now() });
                 found = true;
                 break;
             }
         }
 
-        if(!found) {
-            stat.data.push({cardid: req.params.card, stat: [{type: req.body.type, date: Date.now()}]});
+        if (!found) {
+            stat.data.push({ cardid: req.params.card, stat: [{ type: req.body.type, date: Date.now() }] });
         }
 
         console.log(stat);
 
-        Stat.findByIdAndUpdate(stat._id, {data: stat.data}, { new: true }, (err, stat) => {
+        Stat.findByIdAndUpdate(stat._id, { data: stat.data }, { new: true }, (err, stat) => {
             if (err) {
                 return res.status(500).send({ message: err });
             }
