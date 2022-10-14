@@ -27,7 +27,7 @@ exports.signin = (req, res) => {
     })
         .exec((err, user) => {
             if (err) {
-                res.status(500).send({ message: err });
+                res.status(500).send({ message: err }); 
                 return;
             }
 
@@ -54,6 +54,7 @@ exports.signin = (req, res) => {
                 id: user._id,
                 email: user.email,
                 username: user.username,
+                accessToken: token,
             });
         });
 };

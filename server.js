@@ -7,25 +7,27 @@ const authConfig = require("./config/auth.config");
 
 const app = express();
 
-app.use(cors({
-    credentials: true,
-    exposedHeaders: '*',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-    preflightContinue: false,
-    origin: true,
-    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD']
-  }))
-  app.options(
-    '*',
-    cors({
-      credentials: true,
-      exposedHeaders: '*',
-      allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-      preflightContinue: false,
-      origin: true,
-      methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD']
-    })
-  );
+// app.use(cors({
+//     credentials: true,
+//     exposedHeaders: '*',
+//     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+//     preflightContinue: false,
+//     origin: true,
+//     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD']
+//   }))
+//   app.options(
+//     '*',
+//     cors({
+//       credentials: true,
+//       exposedHeaders: '*',
+//       allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+//       preflightContinue: false,
+//       origin: true,
+//       methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD']
+//     })
+//   );
+
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -35,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
 	cookieSession({
-		name: "learnify-session",
+		name: "connect.sid",
 		secret: authConfig.cookieSecret, // should use as secret environment variable
 		httpOnly: true
 	})
