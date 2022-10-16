@@ -16,6 +16,7 @@ const Stat = mongoose.model(
                 cardid: {
                     type: String,
                 },
+                stared: Boolean,
                 stat: [
                     {
                         type: {

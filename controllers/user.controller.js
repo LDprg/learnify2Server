@@ -74,7 +74,7 @@ exports.getuserstatshort = (req, res) => {
     });
 }
 
-exports.setuserstat = (req, res) => {
+exports.setuserstatcard = (req, res) => {
     Stat.findOne({ setid: req.params.id, userid: req.userId }, (err, stat) => {
         if (err) {
             res.status(500).send({ message: err });
@@ -91,7 +91,7 @@ exports.setuserstat = (req, res) => {
                     res.status(500).send({ message: err });
                     return;
                 }
-                this.setuserstat(req, res);
+                this.setuserstatcard(req, res);
             });
             return;
         }
@@ -114,7 +114,58 @@ exports.setuserstat = (req, res) => {
             stat.data.push({ cardid: req.params.card, stat: [{ type: req.body.type, date: Date.now() }] });
         }
 
-        console.log(stat);
+        Stat.findByIdAndUpdate(stat._id, { data: stat.data }, { new: true }, (err, stat) => {
+            if (err) {
+                return res.status(500).send({ message: err });
+            }
+            if (!stat) {
+                return res.status(404).send({ message: "Set Not found." });
+            }
+
+            res.send({ message: "Set updated successfully!" });
+        });
+    });
+}
+
+exports.setuserstatcardstared = (req, res) => {
+    Stat.findOne({ setid: req.params.id, userid: req.userId }, (err, stat) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        if (!stat) {
+            const stat = new Stat({
+                setid: req.params.id,
+                userid: req.userId
+            });
+
+            stat.save((err, stat) => {
+                if (err) {
+                    res.status(500).send({ message: err });
+                    return;
+                }
+                this.setuserstatcardstared(req, res);
+            });
+            return;
+        }
+
+        if (stat.userid != req.userId) {
+            return res.status(401).send({ message: "Unauthorized!" });
+        }
+
+        var found = false;
+
+        for (var item of stat.data) {
+            if (item.cardid == req.params.card) {
+                item.stared = req.body.stared;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            stat.data.push({ cardid: req.params.card, stared: req.body.stared });
+        }
 
         Stat.findByIdAndUpdate(stat._id, { data: stat.data }, { new: true }, (err, stat) => {
             if (err) {
