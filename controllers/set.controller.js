@@ -10,10 +10,12 @@ exports.setinfo = (req, res) => {
         if (!set) {
             return res.status(404).send({ message: "Set Not found." });
         }
+
         res.status(200).send({
             id: set._id,
             name: set.name,
             userid: set.userid,
+            length: set.data.length,
         });
     });
 };
@@ -28,8 +30,17 @@ exports.setsearch = (req, res) => {
         if (!sets) {
             return res.status(404).send({ message: "No Sets found." });
         }
-        res.status(200).send(sets);
-    }).limit(parseInt(req.params.max)).select({ 'name': 1, 'userid': 1 });
+
+        var ans = JSON.parse(JSON.stringify(sets));
+
+        for(var item of ans) {
+            item.length = item.data?.length;
+            item.data = [];
+            item.data = undefined;
+        }
+
+        res.status(200).send(ans);
+    }).limit(parseInt(req.params.max)).select({ 'name': 1, 'userid': 1, 'data': 1 });
 };
 
 exports.setall = (req, res) => {
@@ -45,6 +56,7 @@ exports.setall = (req, res) => {
             id: set._id,
             name: set.name,
             userid: set.userid,
+            length: set.data.length,
             data: set.data,
         });
     });

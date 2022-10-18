@@ -60,8 +60,17 @@ exports.getuserset = (req, res) => {
             res.status(500).send({ message: err });
             return;
         }
-        res.status(200).send(sets);
-    }).select({ 'name': 1, 'userid': 1 });
+
+        var ans = JSON.parse(JSON.stringify(sets));
+
+        for(var item of ans) {
+            item.length = item.data?.length;
+            item.data = [];
+            item.data = undefined;
+        }
+
+        res.status(200).send(ans);
+    }).select({ 'name': 1, 'userid': 1, 'data': 1 });
 };
 
 exports.getuserstat = (req, res) => {
