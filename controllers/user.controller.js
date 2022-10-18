@@ -3,6 +3,40 @@ const User = db.user;
 const Set = db.set;
 const Stat = db.stat;
 
+function fixStared(setid, stat) {
+    var ans = JSON.parse(JSON.stringify(stat));
+
+    Set.findById(setid, (err, set) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        if (!set) {
+            return res.status(404).send({ message: "Set Not found." });
+        }
+
+        for (var item of ans.data) {
+            var found = false;
+
+            for (var card of set.data) {
+                if (card._id == item.cardid) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                item.stared = undefined;
+                Stat.findByIdAndUpdate(stat._id, { data: ans.data }, { new: true }, (err, stat) => {
+                    if (err) {
+                        return res.status(500).send({ message: err });
+                    }
+                });
+            }
+        }
+    });
+}
+
 exports.getuser = (req, res) => {
     User.findById(req.userId, (err, user) => {
         if (err) {
@@ -43,6 +77,8 @@ exports.getuserstat = (req, res) => {
             return res.status(401).send({ message: "Unauthorized!" });
         }
 
+        fixStared(req.params.id, stat);
+
         res.status(200).send(stat);
     });
 }
@@ -59,6 +95,8 @@ exports.getuserstatshort = (req, res) => {
         if (stat.userid != req.userId) {
             return res.status(401).send({ message: "Unauthorized!" });
         }
+
+        fixStared(req.params.id, stat);
 
         var ans = JSON.parse(JSON.stringify(stat));
 
